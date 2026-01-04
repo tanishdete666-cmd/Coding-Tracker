@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Coding Tracker</title>
+    <style>
+        /* ===== CSS STEP 2: STYLING ===== */
+        
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        /* Main container - centers everything */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 30px;
+        }
+        
+        /* Header styling */
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        
+        /* Form section */
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Form group - each input field */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        /* Input and select styling */
+        input[type="date"],
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* Radio buttons container */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+        
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Button styling */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #5568d3;
+        }
+        
+        /* Entries section */
+        .entries-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        /* Individual entry card */
+        .entry {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .entry-date {
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .entry-details {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .entry-details strong {
+            color: #333;
+        }
+        
+        /* No entries message */
+        .no-entries {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+        }
+        
+        /* Delete button */
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HTML STEP 1: STRUCTURE ===== -->
+    
+    <div class="container">
+        <!-- App Title -->
+        <h1>📊 Daily Coding Tracker</h1>
+        
+        <!-- Form Section: Where users input their data -->
+        <div class="form-section">
+            <form id="codingForm">
+                
+                <!-- Date Input -->
+                <div class="form-group">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" required>
+                </div>
+                
+                <!-- Yes/No Radio Buttons -->
+                <div class="form-group">
+                    <label>Did you code today?</label>
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" id="codedYes" name="coded" value="yes" required>
+                            <label for="codedYes">Yes</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="codedNo" name="coded" value="no">
+                            <label for="codedNo">No</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Time Spent Dropdown -->
+                <div class="form-group">
+                    <label for="timeSpent">Time spent coding:</label>
+                    <select id="timeSpent" required>
+                        <option value="">Select time...</option>
+                        <option value="30m">30 minutes</option>
+                        <option value="1h">1 hour</option>
+                        <option value="2h">2 hours</option>
+                        <option value="3h">3+ hours</option>
+                    </select>
+                </div>
+                
+                <!-- Topic Input -->
+                <div class="form-group">
+                    <label for="topic">Topic learned:</label>
+                    <input type="text" id="topic" placeholder="e.g., JavaScript arrays" required>
+                </div>
+                
+                <!-- Submit Button -->
+                <button type="submit" class="btn">Add Entry</button>
+            </form>
+        </div>
+        
+        <!-- Entries Display Section -->
+        <div class="entries-section">
+            <h2>Your Coding History</h2>
+            <div id="entriesList">
+                <!-- Entries will be dynamically added here by JavaScript -->
+                <div class="no-entries">No entries yet. Start tracking your coding journey!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ===== JAVASCRIPT STEP 3 & 4: LOGIC + LOCALSTORAGE ===== */
+        
+        // ====================
+        // 1. GET HTML ELEMENTS
+        // ====================
+        // We need to "grab" HTML elements to work with them in JavaScript
+        
+        const form = document.getElementById('codingForm');
+        const entriesList = document.getElementById('entriesList');
+        const dateInput = document.getElementById('date');
+        
+        // Set today's date as default in the date input
+        dateInput.valueAsDate = new Date();
+        
+        
+        // ====================
+        // 2. LOCALSTORAGE FUNCTIONS
+        // ====================
+        
+        /**
+         * getEntries - Retrieves all entries from localStorage
+         * Returns: Array of entry objects
+         */
+        function getEntries() {
+            // localStorage.getItem() retrieves data by key name
+            // It returns a STRING (or null if nothing exists)
+            const entriesJSON = localStorage.getItem('codingEntries');
+            
+            // If nothing exists yet, return empty array
+            if (!entriesJSON) {
+                return [];
+            }
+            
+            // JSON.parse() converts the string back into a JavaScript array
+            return JSON.parse(entriesJSON);
+        }
+        
+        /**
+         * saveEntries - Saves entries array to localStorage
+         * Parameter: entries (array of entry objects)
+         */
+        function saveEntries(entries) {
+            // JSON.stringify() converts JavaScript array into a string
+            // localStorage can only store strings
+            const entriesJSON = JSON.stringify(entries);
+            
+            // localStorage.setItem() saves the data with a key name
+            localStorage.setItem('codingEntries', entriesJSON);
+        }
+        
+        
+        // ====================
+        // 3. DISPLAY FUNCTIONS
+        // ====================
+        
+        /**
+         * displayEntries - Shows all entries on the page
+         */
+        function displayEntries() {
+            // Get all saved entries from localStorage
+            const entries = getEntries();
+            
+            // If no entries exist, show a message
+            if (entries.length === 0) {
+                entriesList.innerHTML = '<div class="no-entries">No entries yet. Start tracking your coding journey!</div>';
+                return;
+            }
+            
+            // Sort entries by date (newest first)
+            entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Build HTML for all entries
+            let html = '';
+            
+            entries.forEach((entry, index) => {
+                html += `
+                    <div class="entry">
+                        <div class="entry-date">${formatDate(entry.date)}</div>
+                        <div class="entry-details">
+                            <strong>Coded:</strong> ${entry.coded === 'yes' ? '✅ Yes' : '❌ No'}<br>
+                            <strong>Time:</strong> ${entry.timeSpent}<br>
+                            <strong>Topic:</strong> ${entry.topic}
+                        </div>
+                        <button class="delete-btn" onclick="deleteEntry(${index})">Delete</button>
+                    </div>
+                `;
+            });
+            
+            // Update the page with the new HTML
+            entriesList.innerHTML = html;
+        }
+        
+        /**
+         * formatDate - Converts date string to readable format
+         * Example: "2025-01-04" becomes "January 4, 2025"
+         */
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+        
+        
+        // ====================
+        // 4. ADD ENTRY FUNCTION
+        // ====================
+        
+        /**
+         * handleFormSubmit - Runs when user clicks "Add Entry"
+         */
+        function handleFormSubmit(e) {
+            // Prevent page from refreshing (default form behavior)
+            e.preventDefault();
+            
+            // Get values from form inputs
+            const date = document.getElementById('date').value;
+            const coded = document.querySelector('input[name="coded"]:checked').value;
+            const timeSpent = document.getElementById('timeSpent').value;
+            const topic = document.getElementById('topic').value;
+            
+            // Create a new entry object
+            const newEntry = {
+                date: date,
+                coded: coded,
+                timeSpent: timeSpent,
+                topic: topic,
+                id: Date.now() // Unique ID using timestamp
+            };
+            
+            // Get existing entries
+            const entries = getEntries();
+            
+            // Add new entry to the beginning of array
+            entries.unshift(newEntry);
+            
+            // Save updated array to localStorage
+            saveEntries(entries);
+            
+            // Update the display
+            displayEntries();
+            
+            // Reset the form (clear all inputs)
+            form.reset();
+            
+            // Set date back to today
+            dateInput.valueAsDate = new Date();
+        }
+        
+        
+        // ====================
+        // 5. DELETE ENTRY FUNCTION
+        // ====================
+        
+        /**
+         * deleteEntry - Removes an entry by index
+         */
+        function deleteEntry(index) {
+            // Ask for confirmation
+            if (!confirm('Are you sure you want to delete this entry?')) {
+                return;
+            }
+            
+            // Get all entries
+            const entries = getEntries();
+            
+            // Remove the entry at the specified index
+            entries.splice(index, 1);
+            
+            // Save updated array
+            saveEntries(entries);
+            
+            // Update display
+            displayEntries();
+        }
+        
+        
+        // ====================
+        // 6. INITIALIZE APP
+        // ====================
+        
+        // Add event listener to form - runs handleFormSubmit when submitted
+        form.addEventListener('submit', handleFormSubmit);
+        
+        // Display existing entries when page loads
+        displayEntries();
+        
+        // Make deleteEntry available globally (needed for onclick in HTML)
+        window.deleteEntry = deleteEntry;
+    </script>
+</body>
+</html>
